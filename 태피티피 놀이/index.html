@@ -773,7 +773,7 @@ const rawSvgPresets = [
   });
 
   function updateTransform(p) {
-    p.style.transform = `translate(${p.state.x}px, ${p.state.y}px) rotate(${p.state.r}deg) scale(${p.state.f * 1.015}, 1.015)`;
+    p.style.transform = `translate(${p.state.x}px, ${p.state.y}px) rotate(${p.state.r}deg) scale(${p.state.f}, 1)`;
   }
 
   function getMousePos(evt) {
