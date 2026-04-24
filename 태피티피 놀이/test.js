@@ -1,0 +1,935 @@
+
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svgCanvas = document.getElementById('game-svg');
+
+const rawSvgPresets = [
+    ["<polygon points=\"418.2295776 201.1821701 529.8229314 201.1821701 418.2295776 136.7565249 418.2295776 136.7565249 418.2295776 201.1821701\" style=\"fill: #302783;\"/>", "<path d=\"M231.8876138,158.0317056c5.7182014,35.0649686,33.622998,100.8550867,74.7101928,172.0209635,41.0872631,71.1718381,84.0892884,128.2650969,111.6059388,150.7431334,0,0,.0258323-.0132473.0258323-.0258323v-215.1687786l-186.3419639-107.5694861Z\" style=\"fill: #e94f35;\"/>", "<path d=\"M231.8876138,158.0317056l74.7426487,43.1504645,111.5993151-64.4256452c-82.1743898,0-153.1263207,8.6875862-186.3419639,21.2751807Z\" style=\"fill: #302783;\"/>", "<polygon points=\"306.6302625 201.1821701 418.2295776 265.6011916 418.2295776 201.1821701 418.2295776 136.7565249 306.6302625 201.1821701\" style=\"fill: #fc0;\"/>", "<path d=\"M418.2295776,265.6011916v215.1687786c27.5100267-22.5038687,70.5637847-79.577919,111.6450183-150.7305484,41.100516-71.1526295,68.979481-136.9427477,74.7035692-172.0077162l-186.3485875,107.5694861Z\" style=\"fill: #302783;\"/>", "<polygon points=\"529.8229314 201.1821701 418.2295776 201.1821701 418.2295776 265.6011916 529.8355892 201.1755464 529.8229314 201.1755464 529.8229314 201.1821701\" style=\"fill: #e94f35;\"/>", "<path d=\"M418.2295776,136.7565249l111.5933538,64.4190215h.0126577l74.7425759-43.1438409c-33.2149808-12.5875944-104.1675741-21.2751807-186.3485875-21.2751807Z\" style=\"fill: #e94f35;\"/>"],
+    [
+        "<polygon points=\"128.292 232.5879 112.7294972 232.5889 116.6200971 239.3271 120.510697 246.0654 128.292 232.5879\" style=\"fill: #fc0;\"/>",
+        "<path d=\"M120.499,261.5254c1.5175969,4.0127,2.5722969,12.5791,2.5722969,22.5049.0019,9.9248-1.0488,18.4951-2.5712969,22.5068h-.003903l-12.9931997-22.5078,12.9961027-22.5039Z\" style=\"fill: #302783;\"/>",
+        "<path d=\"M99.7334,297.5078h-10.4238l-7.7813,13.4795c8.5947-4.9619,15.4883-10.1572,18.2051-13.4795Z\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M120.447297,261.5879l22.5087994-12.9932c-4.0136999-1.5195-12.5859997-2.5761-22.5097994-2.5761-9.9237997-.001-18.488297,1.0537-22.501997,2.5742l22.502997,12.9951Z\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"120.469697 306.5127 120.469697 319.9893 128.248 319.9902 120.466797 306.5107 120.466797 306.5137 120.469697 306.5127\" style=\"fill: #302783;\"/>",
+        "<polygon points=\"120.479497 306.5127 120.479497 319.9893 112.6991972 319.9902 120.481397 306.5107 120.481397 306.5137 120.479497 306.5127\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M107.5136973,284.043l-7.7802973,13.4765v.002h-10.4238c2.7148-3.3223,9.6093-8.5156,18.2040973-13.4785Z\" style=\"fill: #302783;\"/>"
+    ],
+    [
+        "<polygon points=\"196.543895 301.5791 184.8690953 308.3184 192.6532951 294.8408 192.6532951 294.8408 196.543895 301.5791\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M198.685495,260.3076c1.5206,4.0127,2.5732999,12.5791,2.5732999,22.5049.0019,9.9248-1.0487949,18.4951-2.5702999,22.5068h-.0039l-12.9941997-22.5078,12.9950997-22.5039Z\" style=\"fill: #302783;\"/>",
+        "<path d=\"M177.9364955,296.2686l-10.4237997.0009-7.7812998,13.4776c8.5956998-4.9619,15.4902996-10.1563,18.2050995-13.4785Z\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"179.2782955 239.4541 194.8407951 239.4561 190.9501952 246.1924 187.0595953 252.9326 179.2782955 239.4541\" style=\"fill: #fc0;\"/>",
+        "<path d=\"M195.2938951,266.1484h-25.9881993c2.7167999-3.3232,9.6131998-8.5234,18.2049995-13.4843,8.5956998-4.9639,16.5400996-8.3321,20.7753995-9.0225l-12.9921997,22.5068Z\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"191.6122952 319.9932 184.874 308.3213 191.6103952 304.4307 191.6122952 319.9951 191.6103952 319.9932 191.6122952 319.9932\" style=\"fill: #302783;\"/>",
+        "<path d=\"M185.7196953,282.8037l-7.7811998,13.4766-.002.001-10.4237997.0009c2.7147999-3.3222,9.6113042-8.5166,18.2069995-13.4785Z\" style=\"fill: #302783;\"/>"
+    ],
+    [
+        "<path d=\"M277.010693,306.7822l10.4218997.001,7.7841998,13.4775c-8.5966998-4.9628-15.4911996-10.1562-18.2060995-13.4785Z\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M269.2294932,293.3174l7.7792998,13.4756.0039.0009,10.4198997.001c-2.7128999-3.3222-9.6073998-8.5156-18.2030995-13.4775Z\" style=\"fill: #302783;\"/>",
+        "<polygon points=\"277.04 252.9785 261.4774934 252.9805 265.3661933 259.7188 269.2587932 266.457 277.04 252.9785\" style=\"fill: #fc0;\"/>",
+        "<path d=\"M259.8895934,278.9668h25.9882993c-2.7167999-3.3223-9.6132998-8.5234-18.2049995-13.4844-8.5957998-4.9629-16.5410996-8.332-20.7753995-9.0224l12.9920997,22.5068Z\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"238.332 301.6133 231.5927941 313.2861 245.0712938 305.5039 245.0712938 305.5039 238.332 301.6133\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"216.1005945 313.2959 227.7743942 320.0352 231.6630941 313.2979 216.1005945 313.2959 216.1024945 313.2959 216.1005945 313.2959\" style=\"fill: #302783;\"/>",
+        "<path d=\"M277.255893,278.9658c-4.2382999.6895-12.1806997,4.0615-20.7763995,9.0235-8.5976998,4.9619-15.4921996,10.1562-18.2060995,13.4804l.001.002,25.9882993.0019,12.9931997-22.5078Z\" style=\"fill: #302783;\"/>"
+    ],
+    [
+        "<polygon points=\"325.4657918 294.8311 332.2040916 306.5029 332.2040916 290.9395 332.2040916 290.9395 325.4657918 294.8311\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M337.4950915,262.2168c-3.3221999,2.7168-8.5194998,9.6084-13.4823997,18.2041s-8.3368998,16.542-9.0282998,20.7783h.0058l22.5058994-12.9941-.001-25.9883Z\" style=\"fill: #302783;\"/>",
+        "<path d=\"M345.2724913,301.6758h10.4256997l7.7812998,13.4795c-8.5956998-4.9619-15.4921996-10.1573-18.2069995-13.4795Z\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"339.9813914 239.668 324.418 239.6699 328.3095917 246.4063 332.1991916 253.1465 339.9813914 239.668\" style=\"fill: #fc0;\"/>",
+        "<path d=\"M347.1464912,262.1953h-25.9872993c2.7168081-3.3223,9.6132998-8.5234,18.2040995-13.4844,8.5967086-4.9629,16.5419996-8.332,20.7762995-9.0234l-12.9930997,22.5078Z\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"340.042 319.9697 340.042 306.4922 332.2626916 306.4902 340.042 319.9717 340.0438914 319.9678 340.042 319.9697\" style=\"fill: #302783;\"/>",
+        "<path d=\"M337.4911915,288.21l7.7802998,13.4775.0019.001,10.4228997.001c-2.7148999-3.3233-9.6093998-8.5176-18.2050995-13.4795Z\" style=\"fill: #302783;\"/>"
+    ],
+    [
+        "<polygon points=\"384.0976903 298.8555 384.0966903 312.334 391.8778901 298.8555 391.8778901 298.8555 384.0976903 298.8555\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M421.0106894,306.7822l10.4228997.001,7.7841998,13.4775c-8.5966998-4.9628-15.4921996-10.1562-18.2070995-13.4785Z\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M423.1063893,276.3965h-25.9891993c2.71681-3.3223,9.6122998-8.5235,18.2059995-13.4844,8.5928105-4.9629,16.5390996-8.332,20.7734995-9.0215l-12.9902997,22.5059Z\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"370.8583906 320.0107 384.3368903 320.0117 384.3368903 312.2314 370.8563906 320.0117 370.8583906 320.0127 370.8583906 320.0107\" style=\"fill: #302783;\"/>",
+        "<path d=\"M413.2294896,293.3174l7.7792998,13.4756.0039.0009,10.4208997.001c-2.7138999-3.3222-9.6083998-8.5156-18.2040995-13.4775Z\" style=\"fill: #302783;\"/>",
+        "<polygon points=\"402.5438898 252.3975 418.1063894 252.3994 414.2157895 259.1367 410.3251896 265.876 402.5438898 252.3975\" style=\"fill: #fc0;\"/>",
+        "<path d=\"M423.1298893,276.3789c-4.2362999.6895-12.1825997,4.0615-20.7773995,9.0234-8.5956998,4.962-15.4920996,10.1563-18.2059995,13.4805l.0029.002,25.9882993.0019,12.9921997-22.5078Z\" style=\"fill: #302783;\"/>"
+    ],
+    [
+        "<polygon points=\"469.4501881 234.4277 485.0126877 234.4287 481.1220878 241.166 477.2304879 247.9053 469.4501881 234.4277\" style=\"fill: #fc0;\"/>",
+        "<path d=\"M485.5751877,261.0879h-25.9911877c2.7177883-3.3233,9.6141881-8.5234,18.207-13.4844,8.5946877-4.9639,16.5400875-8.332,20.7743874-9.0234l-12.9901997,22.5078Z\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"490.0263876 283.5488 490.0263876 297.0273 497.8075874 283.5488 497.8075874 283.5488 490.0263876 283.5488\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M464.2831883,261.0859c4.2372999.6914,12.1825997,4.0616,20.7782995,9.0235,8.5956998,4.9629,15.4921996,10.1582,18.2060995,13.4804l-.003.003h-25.9881993l-12.9931997-22.5069Z\" style=\"fill: #302783;\"/>",
+        "<path d=\"M469.5263881,297.0391l5.2108999,9.0302-7.7811998,13.4776c0-9.9239,1.0468-18.4942,2.5702999-22.5078Z\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"476.597688 297.0781 490.0751876 297.0781 490.0770876 289.2969 476.596688 297.0801 476.597688 297.0801 476.597688 297.0781\" style=\"fill: #302783;\"/>",
+        "<path d=\"M477.2958879,283.5684l-7.7821998,13.4765v.002l5.2118999,9.0273c1.5195-4.0117,2.5702999-12.582,2.5702999-22.5058Z\" style=\"fill: #302783;\"/>"
+    ],
+    [
+        "<polygon points=\"554.797886 246.6348 539.2343864 246.6357 543.126 253.373 547.0165862 260.1123 554.797886 246.6348\" style=\"fill: #fc0;\"/>",
+        "<polygon points=\"547.0663862 298.7559 547.0692862 312.2344 554.849586 298.7568 554.849586 298.7568 547.0663862 298.7559\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M535.332,306.6816h-10.4248133l-7.7811867,13.4795c8.5956867-4.9619,15.4911865-10.1562,18.206-13.4795Z\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M546.9931862,277.7021l25.9891993.001c-2.7167999-3.3232-9.6102998-8.5244-18.2040995-13.4843-8.5966998-4.9639-16.5399996-8.3321-20.7753995-9.0235l12.9902997,22.5068Z\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M546.9794862,277.7266l12.9940997,22.5078c-4.2342999-.6914-12.1874997-4.0625-20.7792995-9.0244-8.5965998-4.962-15.4862864-10.1573-18.2010995-13.4805l25.9862993-.0029Z\" style=\"fill: #302783;\"/>",
+        "<polygon points=\"560.5341858 319.9717 547.0565862 319.9736 547.0575862 312.1924 560.5360858 319.9736 560.5341858 319.9746 560.5341858 319.9717\" style=\"fill: #302783;\"/>",
+        "<path d=\"M543.1142863,293.2168l-7.7802863,13.4766-.0029135.0019-10.4218997.001c2.7148133-3.3233,9.6083998-8.5166,18.2050995-13.4795Z\" style=\"fill: #302783;\"/>"
+    ],
+    [
+        "<polygon points=\"618.8124844 320.0781 605.3358847 320.0801 618.8144844 312.2988 618.8144844 312.2988 618.8124844 320.0781\" style=\"fill: #302783;\"/>",
+        "<polygon points=\"607.2587847 305.5586 618.9315844 312.2979 611.1483846 298.8203 611.1483846 298.8203 607.2587847 305.5586\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M604.9208847,265.0527c-1.5195,4.0127-2.5731999,12.5791-2.5731999,22.5049,0,9.9248,1.0507,18.4951,2.5703152,22.5069h.0038847l12.9961153-22.5079-12.9971153-22.5039Z\" style=\"fill: #302783;\"/>",
+        "<path d=\"M635.8905839,300.918l-10.4237997-.002-7.7831998-13.4785c8.5976998,4.9629,15.4911996,10.1563,18.2069995,13.4805Z\" style=\"fill: #302783;\"/>",
+        "<path d=\"M613.0214845,278.8965h25.9891993c-2.7167999-3.3223-9.6131998-8.5235-18.2049995-13.4844-8.5956843-4.9629-16.5410996-8.332-20.7753995-9.0215l12.9911997,22.5059Z\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M643.6894837,314.3828l-7.7792998-13.4765-.0049-.001-10.4228997-.001c2.7128999,3.3223,9.6113998,8.5156,18.2070995,13.4785Z\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"607.9813846 249.2568 623.5438842 249.2588 619.6532843 255.9961 615.7626844 262.7354 607.9813846 249.2568\" style=\"fill: #fc0;\"/>"
+    ],
+    [
+        "<polygon points=\"685.1845827 320.043 685.1845827 306.5645 692.9657825 320.043 692.9657825 320.043 685.1845827 320.043\" style=\"fill: #302783;\"/>",
+        "<path d=\"M685.167,261.6582c-1.5176173,4.0137-2.5723172,12.5801-2.5723172,22.5059,0,9.9248,1.0508,18.4941,2.5703172,22.5068l.0038827-.001,12.9941997-22.5068-12.9960824-22.5049Z\" style=\"fill: #302783;\"/>",
+        "<path d=\"M737.0927814,279.7969l-5.2148999-9.0274h-15.5624996c8.5956998,4.9629,16.5409996,8.3389,20.7773995,9.0274Z\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"696.8544824 241.1602 696.8544824 256.7227 703.5927822 252.834 710.3310821 248.9434 696.8544824 241.1602\" style=\"fill: #fc0;\"/>",
+        "<path d=\"M690.4540826,270.8164h25.9901993c-2.7186999-3.3223-9.6131998-8.5234-18.2069995-13.4844-8.5936998-4.9629-16.5390996-8.332-20.7733995-9.0234l12.9901997,22.5078Z\" style=\"fill: #e94f35;\"/>",
+        "<polygon points=\"675.542 283.5137 675.542 296.9922 683.3231827 296.9922 675.542 283.5117 675.542 283.5146 675.542 283.5137\" style=\"fill: #e94f35;\"/>",
+        "<path d=\"M685.2060827,261.7676l-7.7812998-13.4766-.0019-.0019-10.4238829-.001c2.7148831,3.3232,9.6113829,8.5166,18.2070827,13.4795Z\" style=\"fill: #302783;\"/>"
+    ]
+];
+
+  const computedScaledPresets = [
+    [
+        {
+            "x": 0.0,
+            "y": 0.0,
+            "r": 0,
+            "f": 1
+        },
+        {
+            "x": 0.0,
+            "y": 0.0,
+            "r": 0,
+            "f": 1
+        },
+        {
+            "x": 0.0,
+            "y": 0.0,
+            "r": 0,
+            "f": 1
+        },
+        {
+            "x": 0.0,
+            "y": 0.0,
+            "r": 0,
+            "f": 1
+        },
+        {
+            "x": 0.0,
+            "y": 0.0,
+            "r": 0,
+            "f": 1
+        },
+        {
+            "x": 0.0,
+            "y": 0.0,
+            "r": 0,
+            "f": 1
+        },
+        {
+            "x": 0.0,
+            "y": 0.0,
+            "r": 0,
+            "f": 1
+        }
+    ],
+    [
+        {
+            "x": 32.69,
+            "y": 402.73,
+            "r": 90,
+            "f": -1
+        },
+        {
+            "x": 151.29,
+            "y": -211.47,
+            "r": 120,
+            "f": 1
+        },
+        {
+            "x": 5.19,
+            "y": 260.03,
+            "r": 330,
+            "f": 1
+        },
+        {
+            "x": 99.59,
+            "y": -183.07,
+            "r": 210,
+            "f": -1
+        },
+        {
+            "x": -30.51,
+            "y": 44.03,
+            "r": 330,
+            "f": 1
+        },
+        {
+            "x": -26.21,
+            "y": 338.83,
+            "r": 90,
+            "f": -1
+        },
+        {
+            "x": -258.01,
+            "y": 323.23,
+            "r": 150,
+            "f": -1
+        }
+    ],
+    [
+        {
+            "x": 1.04,
+            "y": 373.6,
+            "r": 60,
+            "f": 1
+        },
+        {
+            "x": 125.64,
+            "y": -190.3,
+            "r": 90,
+            "f": 1
+        },
+        {
+            "x": 51.24,
+            "y": 226.5,
+            "r": 330,
+            "f": 1
+        },
+        {
+            "x": 93.04,
+            "y": -158.4,
+            "r": 150,
+            "f": 1
+        },
+        {
+            "x": 15.44,
+            "y": 10.7,
+            "r": 330,
+            "f": 1
+        },
+        {
+            "x": -23.46,
+            "y": 231.2,
+            "r": 150,
+            "f": 1
+        },
+        {
+            "x": -211.96,
+            "y": 289.7,
+            "r": 150,
+            "f": -1
+        }
+    ],
+    [
+        {
+            "x": -284.57,
+            "y": 328.74,
+            "r": 30,
+            "f": -1
+        },
+        {
+            "x": 171.83,
+            "y": -147.66,
+            "r": 270,
+            "f": -1
+        },
+        {
+            "x": 244.73,
+            "y": 252.54,
+            "r": 30,
+            "f": -1
+        },
+        {
+            "x": 137.73,
+            "y": -110.76,
+            "r": 210,
+            "f": -1
+        },
+        {
+            "x": -78.97,
+            "y": 11.84,
+            "r": 90,
+            "f": -1
+        },
+        {
+            "x": -179.27,
+            "y": 240.44,
+            "r": 300,
+            "f": -1
+        },
+        {
+            "x": 135.23,
+            "y": 315.74,
+            "r": 210,
+            "f": 1
+        }
+    ],
+    [
+        {
+            "x": -79.49,
+            "y": 381.22,
+            "r": 270,
+            "f": -1
+        },
+        {
+            "x": 101.31,
+            "y": -219.28,
+            "r": 90,
+            "f": 1
+        },
+        {
+            "x": 134.71,
+            "y": 264.62,
+            "r": 30,
+            "f": -1
+        },
+        {
+            "x": -10.29,
+            "y": -157.58,
+            "r": 210,
+            "f": -1
+        },
+        {
+            "x": -188.99,
+            "y": 0.52,
+            "r": 60,
+            "f": -1
+        },
+        {
+            "x": -104.59,
+            "y": 211.02,
+            "r": 240,
+            "f": -1
+        },
+        {
+            "x": 25.21,
+            "y": 327.82,
+            "r": 210,
+            "f": 1
+        }
+    ],
+    [
+        {
+            "x": -254.49,
+            "y": 351.82,
+            "r": 0,
+            "f": -1
+        },
+        {
+            "x": 175.51,
+            "y": -164.78,
+            "r": 210,
+            "f": -1
+        },
+        {
+            "x": 206.11,
+            "y": 254.62,
+            "r": 30,
+            "f": -1
+        },
+        {
+            "x": 109.21,
+            "y": -112.88,
+            "r": 150,
+            "f": 1
+        },
+        {
+            "x": -104.09,
+            "y": -4.58,
+            "r": 90,
+            "f": -1
+        },
+        {
+            "x": -176.59,
+            "y": 214.62,
+            "r": 270,
+            "f": -1
+        },
+        {
+            "x": 96.61,
+            "y": 317.82,
+            "r": 210,
+            "f": 1
+        }
+    ],
+    [
+        {
+            "x": -43.98,
+            "y": 254.32,
+            "r": 0,
+            "f": -1
+        },
+        {
+            "x": 75.72,
+            "y": -207.58,
+            "r": 210,
+            "f": -1
+        },
+        {
+            "x": 34.82,
+            "y": 266.32,
+            "r": 90,
+            "f": -1
+        },
+        {
+            "x": 41.22,
+            "y": -174.78,
+            "r": 150,
+            "f": 1
+        },
+        {
+            "x": -75.18,
+            "y": -47.28,
+            "r": 270,
+            "f": 1
+        },
+        {
+            "x": 35.32,
+            "y": 171.82,
+            "r": 270,
+            "f": -1
+        },
+        {
+            "x": -167.78,
+            "y": 364.52,
+            "r": 270,
+            "f": 1
+        }
+    ],
+    [
+        {
+            "x": 8.94,
+            "y": 372.55,
+            "r": 0,
+            "f": 1
+        },
+        {
+            "x": 154.24,
+            "y": -134.35,
+            "r": 150,
+            "f": 1
+        },
+        {
+            "x": 25.14,
+            "y": 274.95,
+            "r": 330,
+            "f": 1
+        },
+        {
+            "x": 54.34,
+            "y": -133.15,
+            "r": 210,
+            "f": -1
+        },
+        {
+            "x": -127.36,
+            "y": 31.95,
+            "r": 90,
+            "f": 1
+        },
+        {
+            "x": -11.96,
+            "y": 234.95,
+            "r": 270,
+            "f": -1
+        },
+        {
+            "x": -238.06,
+            "y": 338.15,
+            "r": 150,
+            "f": -1
+        }
+    ],
+    [
+        {
+            "x": -127.51,
+            "y": 364.14,
+            "r": 0,
+            "f": -1
+        },
+        {
+            "x": 76.79,
+            "y": -135.06,
+            "r": 150,
+            "f": 1
+        },
+        {
+            "x": 117.99,
+            "y": 224.84,
+            "r": 30,
+            "f": -1
+        },
+        {
+            "x": 27.39,
+            "y": -123.56,
+            "r": 150,
+            "f": 1
+        },
+        {
+            "x": -218.11,
+            "y": 9.24,
+            "r": 30,
+            "f": -1
+        },
+        {
+            "x": -103.21,
+            "y": 224.34,
+            "r": 210,
+            "f": -1
+        },
+        {
+            "x": 8.59,
+            "y": 288.04,
+            "r": 210,
+            "f": 1
+        }
+    ],
+    [
+        {
+            "x": -147.35,
+            "y": 372.7,
+            "r": 90,
+            "f": -1
+        },
+        {
+            "x": 56.95,
+            "y": -163.8,
+            "r": 150,
+            "f": 1
+        },
+        {
+            "x": -81.85,
+            "y": -59.8,
+            "r": 210,
+            "f": -1
+        },
+        {
+            "x": 68.65,
+            "y": -119.9,
+            "r": 180,
+            "f": 1
+        },
+        {
+            "x": -217.65,
+            "y": 14.0,
+            "r": 30,
+            "f": -1
+        },
+        {
+            "x": -216.65,
+            "y": 143.0,
+            "r": 270,
+            "f": 1
+        },
+        {
+            "x": 93.45,
+            "y": 84.6,
+            "r": 210,
+            "f": -1
+        }
+    ]
+];
+
+  let customPresets = JSON.parse(localStorage.getItem('tepitipi_custom_presets_v10')) || [];
+
+  let selectedPiece = null;
+  const pieces = [];
+  let isDragging = false;
+  let startCoord = {x: 0, y: 0};
+
+  function setInnerHTMLAndStroke(p, htmlStr) {
+    p.innerHTML = htmlStr;
+    // Stroke removed as per user request to not use thickness.
+  }
+
+  // Base Logo Init
+  rawSvgPresets[0].forEach((elementStr) => {
+    const group = document.createElementNS(svgNS, 'g');
+    group.classList.add('piece');
+    setInnerHTMLAndStroke(group, elementStr);
+    group.state = { x: 0, y: 0, r: 0, cx: 0, cy: 0, f: 1 };
+    svgCanvas.appendChild(group);
+    pieces.push(group);
+  });
+
+  requestAnimationFrame(() => {
+    pieces.forEach(p => {
+      const bbox = p.getBBox();
+      p.state.cx = bbox.x + bbox.width / 2;
+      p.state.cy = bbox.y + bbox.height / 2;
+      p.style.transformOrigin = `${p.state.cx}px ${p.state.cy}px`;
+      updateTransform(p);
+    });
+  });
+
+  function updateTransform(p) {
+    p.style.transform = `translate(${p.state.x}px, ${p.state.y}px) rotate(${p.state.r}deg) scaleX(${p.state.f})`;
+  }
+
+  function getMousePos(evt) {
+    const CTM = svgCanvas.getScreenCTM();
+    if(evt.touches) return { x: (evt.touches[0].clientX - CTM.e) / CTM.a, y: (evt.touches[0].clientY - CTM.f) / CTM.d };
+    return { x: (evt.clientX - CTM.e) / CTM.a, y: (evt.clientY - CTM.f) / CTM.d };
+  }
+
+  function getShapeAnchors(p) {
+    if (!p.anchorCache) {
+        const anchors = [];
+        const shapeNode = p.firstElementChild;
+        if (shapeNode && shapeNode.tagName.toLowerCase() === 'path' && shapeNode.getTotalLength) {
+            const len = shapeNode.getTotalLength();
+            if (len > 0) {
+                for (let i = 0; i < 24; i++) {
+                    let pt = shapeNode.getPointAtLength(len * (i / 23));
+                    anchors.push({x: pt.x, y: pt.y});
+                }
+            }
+        } else if (shapeNode && shapeNode.tagName.toLowerCase() === 'polygon' && shapeNode.points) {
+            const pts = shapeNode.points;
+            if (pts.numberOfItems >= 3) {
+                for (let i = 0; i < pts.numberOfItems; i++) {
+                    let p1 = pts.getItem(i);
+                    let p2 = pts.getItem((i+1) % pts.numberOfItems);
+                    for (let j = 0; j < 6; j++) {
+                        anchors.push({
+                            x: p1.x + (p2.x - p1.x) * (j / 6),
+                            y: p1.y + (p2.y - p1.y) * (j / 6)
+                        });
+                    }
+                }
+            }
+        }
+        const box = p.getBBox();
+        anchors.push({x: box.x + box.width/2, y: box.y + box.height/2});
+        p.anchorCache = anchors;
+    }
+    const cx = p.state.cx;
+    const cy = p.state.cy;
+    const rad = p.state.r * Math.PI / 180;
+    const cosR = Math.cos(rad);
+    const sinR = Math.sin(rad);
+    return p.anchorCache.map(pt => {
+        let lx = cx + (pt.x - cx) * p.state.f;
+        let ly = pt.y;
+        let dx = lx - cx;
+        let dy = ly - cy;
+        let rx = cx + dx * cosR - dy * sinR;
+        let ry = cy + dx * sinR + dy * cosR;
+        return { x: rx + p.state.x, y: ry + p.state.y };
+    });
+  }
+
+  svgCanvas.addEventListener('mousedown', startDrag);
+  svgCanvas.addEventListener('mousemove', drag);
+  window.addEventListener('mouseup', endDrag);
+  svgCanvas.addEventListener('touchstart', startDrag, {passive: false});
+  svgCanvas.addEventListener('touchmove', drag, {passive: false});
+  window.addEventListener('touchend', endDrag);
+
+  function selectPiece(p) {
+    if (selectedPiece === p) return;
+    if (selectedPiece) selectedPiece.classList.remove('selected');
+    selectedPiece = p;
+    if (p) { p.classList.add('selected'); svgCanvas.appendChild(p); }
+  }
+
+  function startDrag(evt) {
+    const targetGroup = evt.target.closest('g.piece');
+    if (!targetGroup) return selectPiece(null);
+    evt.preventDefault();
+    selectPiece(targetGroup);
+    isDragging = true;
+    const coord = getMousePos(evt);
+    startCoord.x = coord.x - targetGroup.state.x;
+    startCoord.y = coord.y - targetGroup.state.y;
+    targetGroup.style.transition = 'none';
+  }
+
+  function drag(evt) {
+    if (!isDragging || !selectedPiece) return;
+    evt.preventDefault();
+    const coord = getMousePos(evt);
+    let nx = coord.x - startCoord.x;
+    let ny = coord.y - startCoord.y;
+    
+    if(nx < -500) nx = -500;
+    if(nx > 1000) nx = 1000;
+    if(ny < -500) ny = -500;
+    if(ny > 800) ny = 800;
+
+    selectedPiece.state.x = nx;
+    selectedPiece.state.y = ny;
+    updateTransform(selectedPiece);
+  }
+
+  function endDrag(evt) {
+    if (!isDragging || !selectedPiece) return;
+    isDragging = false;
+    selectedPiece.style.transition = 'transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
+    let bestSnap = null;
+    let bestDist = 20; 
+    const myAnchors = getShapeAnchors(selectedPiece);
+    pieces.forEach(target => {
+        if(target === selectedPiece) return;
+        const targetAnchors = getShapeAnchors(target);
+        myAnchors.forEach(mPt => {
+            targetAnchors.forEach(tPt => {
+                const d = Math.hypot(mPt.x - tPt.x, mPt.y - tPt.y);
+                if (d < bestDist) {
+                    bestDist = d;
+                    bestSnap = { dx: tPt.x - mPt.x, dy: tPt.y - mPt.y };
+                }
+            });
+        });
+    });
+    if (bestSnap) {
+        selectedPiece.state.x += bestSnap.dx;
+        selectedPiece.state.y += bestSnap.dy;
+    }
+    updateTransform(selectedPiece);
+    setTimeout(() => { if(selectedPiece) selectedPiece.style.transition = 'filter 0.3s ease'; }, 200);
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (!selectedPiece) return;
+    if (e.key === 'f' || e.key === 'F') {
+      e.preventDefault();
+      selectedPiece.state.f *= -1; 
+      selectedPiece.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+      updateTransform(selectedPiece);
+      setTimeout(() => { if(selectedPiece) selectedPiece.style.transition = 'filter 0.3s ease'; }, 200);
+      return;
+    }
+    let angleChange = 0;
+    if (e.key === 'r' || e.key === 'R' || e.key === 'ArrowRight') angleChange = 15;
+    else if (e.key === 'ArrowLeft') angleChange = -15;
+    if (angleChange !== 0) {
+      e.preventDefault();
+      selectedPiece.state.r = (selectedPiece.state.r + angleChange) % 360; 
+      selectedPiece.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+      updateTransform(selectedPiece);
+      setTimeout(() => { if(selectedPiece) selectedPiece.style.transition = 'filter 0.3s ease'; }, 200);
+    }
+  });
+
+
+
+  document.getElementById('btn-scatter').addEventListener('click', () => {
+    const randomPreset = pieces.map(p => ({
+        html: p.innerHTML,
+        x: (Math.random() - 0.5) * 600,
+        y: (Math.random() - 0.5) * 600,
+        r: Math.floor(Math.random() * 24) * 15,
+        f: Math.random() > 0.5 ? 1 : -1
+    }));
+    applyPresetData(randomPreset, null);
+    updatePresetUI(null);
+  });
+
+  // Built-in presets use computedScaledPresets (smooth CSS-transform animation)
+  const BUILTIN_COUNT = computedScaledPresets.length - 1; // indices 1-9
+
+  const presetListEl = document.getElementById('preset-list');
+  function renderPresetButtons() {
+      presetListEl.innerHTML = '';
+      // Built-in presets 1-9
+      for (let idx = 0; idx < BUILTIN_COUNT; idx++) {
+          const btn = document.createElement('div');
+          btn.className = 'preset-btn';
+          btn.innerText = idx + 1;
+          btn.dataset.builtin = idx;
+          btn.onclick = () => {
+              applyPresetData(computedScaledPresets[idx + 1], idx + 1);
+              updatePresetUI('b' + idx);
+          };
+          presetListEl.appendChild(btn);
+      }
+      // Custom saved presets
+      customPresets.forEach((_, idx) => {
+          const btn = document.createElement('div');
+          btn.className = 'preset-btn';
+          btn.innerText = String.fromCharCode(65 + idx);
+          btn.dataset.custom = idx;
+          btn.onclick = () => {
+              applyPresetData(customPresets[idx], null);
+              updatePresetUI('c' + idx);
+          };
+          presetListEl.appendChild(btn);
+      });
+  }
+
+  const S = 7.170655982147033;
+
+  function getCentroidOfElement(el) {
+      let pts = [];
+      const node = el.firstElementChild;
+      if (!node) return { x: 0, y: 0 };
+      
+      if (node.tagName.toLowerCase() === 'path' && node.getTotalLength) {
+          const len = node.getTotalLength();
+          for (let i = 0; i < 50; i++) {
+              let pt = node.getPointAtLength(i * len / 50);
+              pts.push({ x: pt.x, y: pt.y });
+          }
+      } else if (node.tagName.toLowerCase() === 'polygon' && node.points) {
+          // Sample points along the polygon edges to be consistent
+          const polyPts = node.points;
+          for (let i = 0; i < polyPts.numberOfItems; i++) {
+              let p1 = polyPts.getItem(i);
+              let p2 = polyPts.getItem((i + 1) % polyPts.numberOfItems);
+              for (let j = 0; j < 10; j++) {
+                  pts.push({
+                      x: p1.x + (p2.x - p1.x) * (j / 10),
+                      y: p1.y + (p2.y - p1.y) * (j / 10)
+                  });
+              }
+          }
+      }
+      
+      let cx = 0, cy = 0;
+      for (let p of pts) { cx += p.x; cy += p.y; }
+      return { x: cx / pts.length, y: cy / pts.length };
+  }
+
+  function applyTransformToPt(pt, cx, cy, x, y, r, f) {
+      let lx = cx + (pt.x - cx) * f;
+      let ly = pt.y;
+      let dx = lx - cx;
+      let dy = ly - cy;
+      let rad = r * Math.PI / 180;
+      let cosR = Math.cos(rad);
+      let sinR = Math.sin(rad);
+      let rx = cx + dx * cosR - dy * sinR;
+      let ry = cy + dx * sinR + dy * cosR;
+      return { x: rx + x, y: ry + y };
+  }
+
+  function initPerfectOffsets() {
+      const tempSvg = document.createElementNS(svgNS, 'svg');
+      tempSvg.style.position = 'absolute';
+      tempSvg.style.visibility = 'hidden';
+      document.body.appendChild(tempSvg);
+
+      // Pre-calculate base centroids and centers
+      const baseData = [];
+      for (let i = 0; i < 7; i++) {
+          const g = document.createElementNS(svgNS, 'g');
+          g.innerHTML = rawSvgPresets[0][i];
+          tempSvg.appendChild(g);
+          const bbox = g.getBBox();
+          const cx = bbox.x + bbox.width / 2;
+          const cy = bbox.y + bbox.height / 2;
+          const centroid = getCentroidOfElement(g);
+          baseData.push({ cx, cy, centroid });
+          tempSvg.removeChild(g);
+      }
+
+      for (let pIdx = 1; pIdx < rawSvgPresets.length; pIdx++) {
+          const presetArr = computedScaledPresets[pIdx];
+          
+          let Global_Tx = 0;
+          let Global_Ty = 0;
+
+          // 1. Calculate Global Transform using Piece 0
+          const t0 = document.createElementNS(svgNS, 'g');
+          t0.innerHTML = rawSvgPresets[pIdx][0];
+          tempSvg.appendChild(t0);
+          const tgtCentroid0 = getCentroidOfElement(t0);
+          tempSvg.removeChild(t0);
+
+          // Where is base piece 0 after applying its approx CSS transform?
+          // We apply the rotation/scale to its centroid around its cx,cy, but keeping translate x,y as given.
+          const rotatedBaseCentroid0 = applyTransformToPt(baseData[0].centroid, baseData[0].cx, baseData[0].cy, presetArr[0].x, presetArr[0].y, presetArr[0].r, presetArr[0].f);
+          
+          // Target is scaled by S. So the visual centroid of target is tgtCentroid0 * S
+          // We want: tgtCentroid0 * S + (Global_Tx, Global_Ty) = rotatedBaseCentroid0
+          Global_Tx = rotatedBaseCentroid0.x - (tgtCentroid0.x * S);
+          Global_Ty = rotatedBaseCentroid0.y - (tgtCentroid0.y * S);
+
+          // Piece 0 doesn't need its x,y adjusted, it dictates the global position
+          
+          // 2. Adjust x, y for pieces 1 to 6
+          for (let i = 1; i < 7; i++) {
+              const ti = document.createElementNS(svgNS, 'g');
+              ti.innerHTML = rawSvgPresets[pIdx][i];
+              tempSvg.appendChild(ti);
+              const tgtCentroidI = getCentroidOfElement(ti);
+              tempSvg.removeChild(ti);
+
+              // Target's true visual position
+              const targetX = tgtCentroidI.x * S + Global_Tx;
+              const targetY = tgtCentroidI.y * S + Global_Ty;
+
+              // Where is the base centroid after ONLY rotation and flip? (x=0, y=0)
+              const rotatedBaseCentroidI_NoTrans = applyTransformToPt(baseData[i].centroid, baseData[i].cx, baseData[i].cy, 0, 0, presetArr[i].r, presetArr[i].f);
+
+              // The perfect x,y must bridge the gap
+              presetArr[i].x = targetX - rotatedBaseCentroidI_NoTrans.x;
+              presetArr[i].y = targetY - rotatedBaseCentroidI_NoTrans.y;
+          }
+      }
+      document.body.removeChild(tempSvg);
+  }
+  
+  window.addEventListener('load', initPerfectOffsets);
+
+  let _aniTimeout = null;
+
+  function applyPresetData(presetArr) {
+      if (_aniTimeout) { clearTimeout(_aniTimeout); _aniTimeout = null; }
+
+      pieces.forEach((p, i) => {
+          if (!presetArr[i]) return;
+          p.style.transition = 'transform 0.75s cubic-bezier(0.4, 0, 0.2, 1)';
+          p.state.x = presetArr[i].x || 0;
+          p.state.y = presetArr[i].y || 0;
+          p.state.r = presetArr[i].r || 0;
+          p.state.f = presetArr[i].f || 1;
+          updateTransform(p);
+      });
+
+      _aniTimeout = setTimeout(() => {
+          pieces.forEach(p => p.style.transition = 'filter 0.3s ease');
+          _aniTimeout = null;
+      }, 800);
+  }
+
+  function updatePresetUI(activeKey) {
+      presetListEl.querySelectorAll('.preset-btn').forEach((b) => {
+          const key = b.dataset.builtin !== undefined ? 'b' + b.dataset.builtin
+                    : b.dataset.custom !== undefined ? 'c' + b.dataset.custom
+                    : null;
+          if (key === String(activeKey)) b.classList.add('active');
+          else b.classList.remove('active');
+      });
+  }
+
+  document.getElementById('btn-reset').onclick = () => {
+      applyPresetData(computedScaledPresets[0]);
+      updatePresetUI(null);
+  };
+
+  document.getElementById('btn-save').addEventListener('click', () => {
+      const currentState = pieces.map(p => ({
+          html: p.innerHTML,
+          x: p.state.x,
+          y: p.state.y,
+          r: p.state.r,
+          f: p.state.f
+      }));
+      customPresets.push(currentState);
+      localStorage.setItem('tepitipi_custom_presets_v10', JSON.stringify(customPresets));
+      renderPresetButtons();
+      updatePresetUI('c' + (customPresets.length - 1));
+  });
+
+  document.getElementById('btn-clear').addEventListener('click', () => {
+      if (confirm('저장된 커스텀 포즈를 모두 삭제할까요?')) {
+          localStorage.removeItem('tepitipi_custom_presets_v10');
+          customPresets.length = 0;
+          renderPresetButtons();
+          updatePresetUI(null);
+      }
+  });
+
+  renderPresetButtons();
